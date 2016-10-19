@@ -31,3 +31,29 @@
 # Create a function called `BetterShooters` that takes in two teams and returns
 # a data.frame of the team with the better field-goal percentage. The returned 
 # data.frame should include the team name, field-goal percentage, and points.
+
+library(dplyr)
+
+team.data <- read.csv("data\\teams.csv")
+
+#View(team.data)
+
+team.data <- mutate(team.data, Ratio = TOV / STL)
+
+team.data <- arrange(team.data, Ratio)
+
+team.data <- mutate(team.data, ASTGM = AST / G) %>% arrange(-ASTGM)
+
+good.offense <- filter(team.data, PTS > 8700)
+
+good.defense <- filter(team.data, BLK > 470)
+
+defense.stats <- select(team.data, Team, DRB, STL, BLK)
+
+offense.stats <- select(team.data, Team, ORB, FG., AST)
+
+BetterShooters <- function(team1, team2) {
+  return (filter(team.data, Team %in% c(team1, team2)) %>% 
+            filter(FG. == max(FG.)) %>%
+            select(Team, FG., PTS))
+}
